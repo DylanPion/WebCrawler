@@ -13,12 +13,11 @@ app.use(express.json());
 
 app.use("/", router);
 
-// Démarrage du serveur
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-// Fermeture de la connexion Kafka lors de l'arrêt du serveur
+// Close the Kafka connection when the server is stopped
 process.on("SIGINT", async () => {
   await disconnectKafka();
   process.exit(0);

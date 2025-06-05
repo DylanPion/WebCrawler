@@ -1,5 +1,6 @@
 const INVALID_EXTENSIONS = [".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico"];
 
+// Validate the URL
 const isValidUrl = (url) => {
   if (!url) {
     console.log("URL is empty");

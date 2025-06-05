@@ -1,24 +1,24 @@
 const { Kafka } = require("kafkajs");
 const { brokers, clientId } = require("../config/kafka");
 
-const kafka = new Kafka({ clientId, brokers });
+const kafka = new Kafka({
+  clientId,
+  brokers: brokers || process.env.KAFKA_BROKER,
+});
 const producer = kafka.producer();
 
-// Connexion au producteur Kafka
+// Connect to Kafka Producer
 const connectKafka = async () => {
   try {
     await producer.connect();
-    console.log("✅ Connexion au producteur Kafka réussie");
+    console.log("✅ Kafka Producer connected");
   } catch (error) {
-    console.error(
-      "❌ Erreur lors de la connexion au producteur Kafka :",
-      error
-    );
+    console.error("❌ Error connecting to Kafka Producer :", error);
     throw error;
   }
 };
 
-// Envoi d'un message au producteur Kafka
+// Send a message to Kafka Producer
 const sendMessage = async (message) => {
   try {
     await producer.send({
@@ -26,19 +26,16 @@ const sendMessage = async (message) => {
       messages: [{ value: String(message.body.url) }],
     });
   } catch (error) {
-    console.error("❌ Erreur lors de l'envoi du message Kafka :", error);
+    console.error("❌ Error sending message to Kafka :", error);
   }
 };
 
-// Déconnexion du producteur Kafka
+// Disconnect from Kafka Producer
 const disconnectKafka = async () => {
   try {
     await producer.disconnect();
   } catch (error) {
-    console.error(
-      "❌ Erreur lors de la déconnexion du producteur Kafka :",
-      error
-    );
+    console.error("❌ Error disconnecting from Kafka Producer :", error);
     throw error;
   }
 };

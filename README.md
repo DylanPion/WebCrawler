@@ -45,5 +45,23 @@ Après dans un autre terminal entré :
 
 brew services start mongodb-community@8.0
 
-Note : Un post pour download un fichier nécessite un blob mais pas un get grâce au Content-Disposition: attachment
-# WebCrawler
+Voir les Messages dans le topic :
+cd /Users/dylanpion/Desktop/kafka_2.13-3.9.0
+./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic crawlers-url --from-beginning
+
+Test manuel d'envoie de message :
+./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic crawlers-url --from-beginning
+Ecrire le message
+
+## Lancement de redis : redis-server
+
+---
+
+# Rendu de l'examn
+
+## Docker
+
+### Seed URL
+
+docker build -t seed-url .
+docker run -p 3000:3000 seed-url

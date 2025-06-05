@@ -1,6 +1,6 @@
 const WebUrl = require("../models/webUrl");
 
-// Sauvegarde l'URL dans la base de données
+// Save the URL in the database
 const saveUrl = async (url) => {
   const webUrl = new WebUrl({ url });
   await webUrl.save();

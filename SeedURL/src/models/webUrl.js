@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// WebUrl schema
 const webUrlSchema = new mongoose.Schema({
   url: {
     type: String,

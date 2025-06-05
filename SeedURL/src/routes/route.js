@@ -4,7 +4,7 @@ const kafkaController = require("../controllers/kafkaController");
 const fileController = require("../controllers/fileController");
 
 // Route POST /send-url
-router.post("/send-url", kafkaController.sendMessage);
+router.post("/api/send-url", kafkaController.sendMessage);
 
 // Router GET /api/files
 router.get("/api/files", fileController.getHtmlFiles);

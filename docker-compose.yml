@@ -1,0 +1,92 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  mongodb:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+  redis:
+    image: redis:7
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  app:
+    build: ./SeedURL
+    depends_on:
+      - kafka
+      - mongodb
+    environment:
+      KAFKA_BROKER: kafka:9092
+      MONGODB_URI: mongodb://root:password@mongodb:27017/
+    ports:
+      - "3000:3000"
+
+  parser:
+    build: ./Parser
+    depends_on:
+      - kafka
+      - redis
+    environment:
+      KAFKA_BROKER: kafka:9092
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "8081:8080"
+
+  fetcher:
+    build: ./Fetcher
+    depends_on:
+      - kafka
+      - redis
+    environment:
+      KAFKA_BROKER: kafka:9092
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "8082:8080"
+
+  crawlerinterface:
+    build: ./CrawlerInterface
+    ports:
+      - "5173:5173"
+
+  mariadb:
+    image: mariadb:11
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: crawler_app
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "8889:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+volumes:
+  mongo_data:
+  mariadb_data:
+  redis_data:
